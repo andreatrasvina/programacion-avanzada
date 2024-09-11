@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    input, button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ message }} {{ nameInput }}</h1>
+    <input id="nameInput" v-model="nameInput"/>
+
+    <button @click="clickCount++">Count: {{clickCount}}</button>
+
+    <input id="numInput1" v-model.number="numInput1" placeholder="Number 1"/>
+    <input id="numInput2" v-model.number="numInput2" placeholder="Number 2"/>
+
+    <button @click="sum">Suma</button>
+
+    <h1>{{ result }}</h1>
+
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        const message = ref('Hola: ');
+        const nameInput = ref('');
+        const clickCount = ref(0);
+
+        const numInput1 = ref();
+        const numInput2 = ref();
+        const result = ref(null);
+
+        const sum = () => {
+          result.value = numInput1.value + numInput2.value;
+        };
+
+        return {
+          message,
+          nameInput,
+          clickCount,
+          numInput1,
+          numInput2,
+          result,
+          sum
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
