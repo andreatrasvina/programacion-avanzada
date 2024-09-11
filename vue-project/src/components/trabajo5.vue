@@ -28,6 +28,7 @@
     methods: {
       agregarPersona() { 
 
+        //Metemos un comentario de prueba
           this.personas.push({ user: this.user, rol: this.rol });
         
       }
