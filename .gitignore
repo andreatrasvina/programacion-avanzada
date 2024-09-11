@@ -1,0 +1,25 @@
+/node_modules/
+/.vite/
+/dist/
+
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Local environment variables
+*.local
+
+# MacOS Finder
+*.DS_Store
+
+# JetBrains IDEs
+.idea/
+
