@@ -9,23 +9,28 @@
     <p v-if="message">{{ message }} {{ email }}</p>
 
     <table v-if="isAuthenticated">
-      
       <thead>
         <tr>
           <th>Email</th>
           <th>Password</th>
         </tr>
       </thead>
-
       <tbody>
         <tr v-for="user in users" :key="user.email">
           <td>{{ user.email }}</td>
           <td>{{ user.password }}</td>
         </tr>
       </tbody>
-
     </table>
 
+    <button @click="isVisible=true">Add new user</button>
+
+    <form v-if="isVisible" @submit.prevent="addUser">
+      <input required v-model="add_email" placeholder="Email"/>
+      <input required v-model="add_password" type="password" placeholder="Password"/>
+      <button type="submit">Add</button>
+      <button @click="isVisible=false" type="button">Cancel</button>
+    </form>
   </div>
 </template>
 
@@ -38,15 +43,17 @@ export default {
       message: '',
       isAuthenticated: false,
       users: [],
+      isVisible: false,
+      add_email: '',
+      add_password: '',
     };
   },
 
   created() {
-    //verifica si hay usuario enel localStorage
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       this.isAuthenticated = true;
-      this.users = JSON.parse(storedUser); //recupera el usuario
+      this.users = JSON.parse(storedUser);
       this.message = "SESION GUARDADA!!!";
     }
   },
@@ -58,17 +65,14 @@ export default {
         const users = await response.json();
 
         const validUser = users.some(user =>
-        user.email === this.email && user.password === this.password
+          user.email === this.email && user.password === this.password
         );
 
         if (validUser) {
           this.message = "Bienvenido";
-          this.isAuthenticated = true; 
+          this.isAuthenticated = true;
           this.users = users;
-          
           localStorage.setItem('user', JSON.stringify(users));
-          //sessionStorage.setItem('users', JSON.stringify(users));
-
         } else {
           alert("No existe el usuario");
           this.message = '';
@@ -76,19 +80,32 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+
+    addUser() {
+      const newUser = {
+        email: this.add_email,
+        password: this.add_password
+      };
+
+      this.users.push(newUser);
+      this.add_email = '';
+      this.add_password = ''; 
+      this.isVisible = false; 
+      this.message = 'Usuario agregado cortectamente'; 
+
+      localStorage.setItem('user', JSON.stringify(this.users));
     }
   }
 };
 </script>
 
 <style>
-
-table{
+table {
   background-color: pink;
 }
 
-th{
+th {
   background-color: cornsilk;
 }
-
 </style>
