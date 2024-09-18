@@ -1,10 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import trabajo5 from './components/trabajo5.vue'
+import trabajo11 from './components/trabajo11.vue'
 </script>
 
 <template>
-    <trabajo5></trabajo5>
+    <trabajo11></trabajo11>
 
 </template>
 
