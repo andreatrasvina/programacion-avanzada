@@ -32,7 +32,7 @@
         <input required v-model="add_email" placeholder="Email"/>
         <input required v-model="add_password" type="password" placeholder="Password"/>
         <button type="submit">Add</button>
-        <button @click="isVisible=false" type="button">Cancel</button>
+        <button @click="cancel" type="button">Cancel</button>
       </form>
 
     </div>
@@ -93,6 +93,12 @@ export default {
       this.isAuthenticated = false;
       this.email = '';
       this.password = '';
+    },
+
+    cancel() {
+      this.isVisible=false;
+      this.add_email="";
+      this.add_password="";
     },
 
     addUser() {
