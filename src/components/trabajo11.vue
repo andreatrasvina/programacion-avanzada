@@ -6,31 +6,37 @@
       <button type="submit">Access</button>
     </form>
 
-    <p v-if="message">{{ message }} {{ email }}</p>
+    <div v-if="isAuthenticated">
 
-    <table v-if="isAuthenticated">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Password</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.email">
-          <td>{{ user.email }}</td>
-          <td>{{ user.password }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <p v-if="message">{{ message }} {{ email }}</p>
+      <button @click="logout">Logout</button>
 
-    <button @click="isVisible=true">Add new user</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Password</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.email">
+            <td>{{ user.email }}</td>
+            <td>{{ user.password }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <form v-if="isVisible" @submit.prevent="addUser">
-      <input required v-model="add_email" placeholder="Email"/>
-      <input required v-model="add_password" type="password" placeholder="Password"/>
-      <button type="submit">Add</button>
-      <button @click="isVisible=false" type="button">Cancel</button>
-    </form>
+      <button @click="isVisible=true">Add new user</button>
+  
+      <form v-if="isVisible" @submit.prevent="addUser">
+        <input required v-model="add_email" placeholder="Email"/>
+        <input required v-model="add_password" type="password" placeholder="Password"/>
+        <button type="submit">Add</button>
+        <button @click="isVisible=false" type="button">Cancel</button>
+      </form>
+
+    </div>
+
   </div>
 </template>
 
@@ -80,6 +86,13 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+
+    logout() {
+      localStorage.clear();
+      this.isAuthenticated = false;
+      this.email = '';
+      this.password = '';
     },
 
     addUser() {
