@@ -11,30 +11,43 @@
       <p v-if="message">{{ message }} {{ email }}</p>
       <button @click="logout">Logout</button>
 
-      <table>
+      <table v-if="!isEditing && !isVisible">
         <thead>
           <tr>
             <th>Email</th>
             <th>Password</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.email">
+          <tr v-for="(user, index) in users" :key="user.email">
             <td>{{ user.email }}</td>
             <td>{{ user.password }}</td>
+            <td>
+              <button @click="startEdit(index)">Edit</button>
+              <button @click="remove(index)">Remove</button>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <button @click="isVisible=true">Add new user</button>
-  
+      <div v-if="!isEditing && !isVisible">
+        <button @click="isVisible=true">Add new user</button>
+      </div>
+
       <form v-if="isVisible" @submit.prevent="addUser">
-        <input required v-model="add_email" placeholder="Email"/>
-        <input required v-model="add_password" type="password" placeholder="Password"/>
+        <input required v-model="add_email" placeholder="New email"/>
+        <input required v-model="add_password" type="password" placeholder="New password"/>
         <button type="submit">Add</button>
         <button @click="cancel" type="button">Cancel</button>
       </form>
 
+      <form v-if="isEditing" @submit.prevent="updateUser">
+        <input required v-model="edit_email" placeholder="Edit email"/>
+        <input required v-model="edit_password" type="password" placeholder="Edit password"/>
+        <button type="submit">Update</button>
+        <button @click="cancelEdit" type="button">Cancel</button>
+      </form>
     </div>
 
   </div>
@@ -52,6 +65,10 @@ export default {
       isVisible: false,
       add_email: '',
       add_password: '',
+      isEditing: false,
+      editIndex: null,
+      edit_email: '',
+      edit_password: '',
     };
   },
 
@@ -96,9 +113,38 @@ export default {
     },
 
     cancel() {
-      this.isVisible=false;
-      this.add_email="";
-      this.add_password="";
+      this.isVisible = false;
+      this.add_email = "";
+      this.add_password = "";
+    },
+
+    startEdit(index) {
+      this.editIndex = index;
+      this.edit_email = this.users[index].email;
+      this.edit_password = this.users[index].password;
+      this.isEditing = true;
+    },
+
+    updateUser() {
+      this.users[this.editIndex].email = this.edit_email;
+      this.users[this.editIndex].password = this.edit_password;
+      localStorage.setItem('user', JSON.stringify(this.users));
+      this.isEditing = false;
+      this.edit_email = '';
+      this.edit_password = '';
+      this.message = 'Usuario actualizado correctamente';
+    },
+
+    cancelEdit() {
+      this.isEditing = false;
+      this.edit_email = '';
+      this.edit_password = '';
+    },
+
+    remove(index) {
+      this.users.splice(index, 1);
+      localStorage.setItem('user', JSON.stringify(this.users));
+      this.message = 'Usuario eliminado correctamente';
     },
 
     addUser() {
@@ -111,7 +157,7 @@ export default {
       this.add_email = '';
       this.add_password = ''; 
       this.isVisible = false; 
-      this.message = 'Usuario agregado cortectamente'; 
+      this.message = 'Usuario agregado correctamente'; 
 
       localStorage.setItem('user', JSON.stringify(this.users));
     }
